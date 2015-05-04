@@ -13,7 +13,7 @@ denormalize=: 3 : 0
    ixs=. (udts i. dts),&.>used i. seds
    used=. '''',&.>used                  NB. Prefix SEDOLs w/quote for Excel
    mat=. vals ixs}(<,'_')$~($udts),$used
-   mat=. ((<'Dates/SEDOLs'),used),udts,.mat
+   mat=. ((<'Dates/IDs'),used),udts,.mat
    (;LF,~&.>}.&.>;&.> <"1 TAB,&.>mat) fwrite outfl
 NB.EG denormalize 'R2kSectors.txt';'R2kSectorsDatesBySEDOLs.txt'
 )
