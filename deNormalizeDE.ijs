@@ -5,7 +5,9 @@ denormalize=: 3 : 0
    'inpfl outfl'=. y
    'r2ktit r2k'=. split <;._1&>TAB,&.><;._2 ] LF (] , [ #~ [ ~: [: {: ]) CR-.~fread inpfl
    udts=. ~.dts=. r2k{"1~r2ktit i. <'Date'
-   used=. ~.seds=. r2k{"1~r2ktit i. <'$sedol'
+   try. whval=. r2ktit i. <'$sedol' catch. whval=. 1 end.
+   if. whval=#r2ktit do. whval=. 1 end.
+   used=. ~.seds=. r2k{"1~whval
    vals=. _1{"1 r2k
    vals=. (vals e. a:)}vals,:(<,'_')    NB. Replace missing w/"_"
    ixs=. (udts i. dts),&.>used i. seds
@@ -28,10 +30,10 @@ ioForm=: 0 : 0
        bin v; minwh 420 20;
            cc inpfl edit;
            cc outpfl edit;
+	   minwh 420 40;
            cc msgBox static center;set msgBox text;
        bin z;
    bin z;
-   
 )
 
 iofiles_doneBtn_button=: 3 : 0
@@ -41,29 +43,22 @@ iofiles_doneBtn_button=: 3 : 0
        wd 'set outpfl focus'
    else.
        if. fexist outpfl_Input_ do.
-           wd 'set msgBox text Overwriting ',outpfl_Input_
+           wd 'msgs'[wd 'set msgBox text Overwriting ',outpfl_Input_
+	   (6!:3)2
        end.
        rc=. 1
        wd 'set msgBox text Starting at ',(":(6!:0)''),'...'
        wd 'set doneBtn focus'
+       wd 'msgs'
        try. denormalize_base_ inpfl_Input_;outpfl_Input_
        catch. rc=. 0 [ wd 'set msgBox text Error' end.
        (6!:3) 2 [ wd 'set msgBox text Done at ',(":(6!:0)''),'...'
        if. rc do. wd 'set msgBox text Tabular output in "',outpfl_Input_,'"' end.
        smoutput (6!:0)''
-       ioFiles_close ''
+       ioFiles_close '' [ (6!:3)5 [ wd 'msgs'
    end.
    ''
 )
-
-TimeCTR=: 0
-sys_timer_z_=: 3 : 0
-   TimeCTR_Input_=: >:TimeCTR_Input_
-   if. TimeCTR_Input_<10 do. (6!:3) 1 [ smoutput qts''
-   else. wd 'timer 0' end.
-   ''
-)
-NB. load 'c:\amisc\Clarifi\SocGen\deNormalizeDE.ijs'
 
 ioFiles=: 3 : 0
    wd 'pc iofiles;pn "Input/Output Files"'
